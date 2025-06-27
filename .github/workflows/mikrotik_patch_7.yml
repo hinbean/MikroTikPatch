@@ -2,8 +2,8 @@ name: Patch Mikrotik RouterOS 7.x
 on:
   # push:
   #   branches: [ "main" ]
-  schedule:
-    - cron: "0 0 * * *" # At UTC 00:00 on every day
+  #schedule:
+  #  - cron: "0 0 * * *" # At UTC 00:00 on every day
   workflow_dispatch:
     inputs:
       arch:
@@ -61,7 +61,7 @@ env:
 
 jobs:
   Set_Variables:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     outputs:
       BUILD_TIME: ${{ steps.set_vars.outputs.BUILD_TIME }}
       RELEASE: ${{ steps.set_vars.outputs.RELEASE }}
@@ -96,7 +96,7 @@ jobs:
 
   Patch_RouterOS:
     needs: Set_Variables
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     strategy:
       matrix: 
         include: ${{ fromJSON(needs.Set_Variables.outputs.MATRIX_JSON) }}
@@ -148,8 +148,8 @@ jobs:
         sudo apt-get update > /dev/null
         
     - name: Get loader patch files
-      #if: steps.get_latest.outputs.has_new_version == 'true'
-      #run: |
+      if: steps.get_latest.outputs.has_new_version == 'true'
+      run: |
       #  wget -nv -O loader.7z https://${{ env.CUSTOM_UPGRADE_URL }}/routeros/loader.7z
       #  sudo apt-get install -y p7zip-full > /dev/null
       #  7z x -p"${{ secrets.LOADER_7Z_PASSWORD }}" loader.7z >> /dev/null
