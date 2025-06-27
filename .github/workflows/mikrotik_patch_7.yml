@@ -61,7 +61,7 @@ env:
 
 jobs:
   Set_Variables:
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     outputs:
       BUILD_TIME: ${{ steps.set_vars.outputs.BUILD_TIME }}
       RELEASE: ${{ steps.set_vars.outputs.RELEASE }}
@@ -96,7 +96,7 @@ jobs:
 
   Patch_RouterOS:
     needs: Set_Variables
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     strategy:
       matrix: 
         include: ${{ fromJSON(needs.Set_Variables.outputs.MATRIX_JSON) }}
@@ -148,12 +148,12 @@ jobs:
         sudo apt-get update > /dev/null
         
     - name: Get loader patch files
-      if: steps.get_latest.outputs.has_new_version == 'true'
-      run: |
-        wget -nv -O loader.7z https://${{ env.CUSTOM_UPGRADE_URL }}/routeros/loader.7z
-        sudo apt-get install -y p7zip-full > /dev/null
-        7z x -p"${{ secrets.LOADER_7Z_PASSWORD }}" loader.7z >> /dev/null
-        rm loader.7z
+      #if: steps.get_latest.outputs.has_new_version == 'true'
+      #run: |
+      #  wget -nv -O loader.7z https://${{ env.CUSTOM_UPGRADE_URL }}/routeros/loader.7z
+      #  sudo apt-get install -y p7zip-full > /dev/null
+      #  7z x -p"${{ secrets.LOADER_7Z_PASSWORD }}" loader.7z >> /dev/null
+      #  rm loader.7z
 
     - name: Cache Squashfs
       if: steps.get_latest.outputs.has_new_version == 'true'
