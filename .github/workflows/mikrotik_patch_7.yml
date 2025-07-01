@@ -61,7 +61,7 @@ env:
 
 jobs:
   Set_Variables:
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     outputs:
       BUILD_TIME: ${{ steps.set_vars.outputs.BUILD_TIME }}
       RELEASE: ${{ steps.set_vars.outputs.RELEASE }}
@@ -96,7 +96,7 @@ jobs:
 
   Patch_RouterOS:
     needs: Set_Variables
-    runs-on: self-hosted
+    runs-on: ubuntu-22.04
     strategy:
       matrix: 
         include: ${{ fromJSON(needs.Set_Variables.outputs.MATRIX_JSON) }}
